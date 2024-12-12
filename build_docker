@@ -1,0 +1,31 @@
+---
+
+
+- name: Create Docker Image
+  hosts: all
+  become: true
+  tasks:
+
+
+    - name: Copy Dockerfile to the remote host
+      copy:
+        src: Dockerfile
+        dest: /home/dexter
+
+    - name: Cp files from control to remote host
+      copy:
+        src: ./front-end
+        dest: /home/dexter
+
+
+    - name: Build Docker Image
+      command: docker build -t group2portfolio /home/dldperez
+      args:
+        chdir: /home/dexter
+      when: ansible_distribution=="Ubuntu"
+
+    - name: Build Docker Image
+      command: docker build --no-cache -t group4portfolios .
+      args:
+        chdir: /home/dexter
+      when: ansible_distribution=="CentOS"
